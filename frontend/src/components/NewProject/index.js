@@ -59,7 +59,7 @@ const NewProject = () => {
   //     setProjects((prevProjects) => [...prevProjects, newProject]);
   //   };
 
-  const handleFinish = (values) => {
+  const handleFinish = values => {
     console.log(values);
     const projId = (projects.length + 1).toString();
     const newProject = { ...values, projId };

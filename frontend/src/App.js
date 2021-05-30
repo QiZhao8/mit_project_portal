@@ -8,11 +8,13 @@ import Header from "./components/Header";
 import LandingPage from "./components/LandingPage";
 import SignUpPage from "./components/SignupPage/";
 import BrowseProjects from "./components/BrowseProjects";
-import DevSettings from "./DevSettings";
-import NewEOI from "./components/NewEOI";
 import MyProjects from "./components/MyProjects";
 import CoordinatorDashboard from "./components/CoordinatorDashboard";
 import NewProject from "./components/NewProject";
+import NewEOI from "./components/NewEOI";
+
+import DevSettings from "./DevSettings";
+
 // import MyProjects from "./components/MyProjects";
 
 // utils and constants
@@ -58,12 +60,12 @@ function App() {
             <Route exact path={ROUTES.NEW_PROJECT}>
               <NewProject />
             </Route>
-            <ProposalProvider>
-              <Route exact path={ROUTES.MY_PROJECTS}>
-                <MyProjects />
-              </Route>
-            </ProposalProvider>
             <EOIProvider>
+              <ProposalProvider>
+                <Route exact path={ROUTES.MY_PROJECTS}>
+                  <MyProjects />
+                </Route>
+              </ProposalProvider>
               <Route exact path={ROUTES.NEW_EOI}>
                 <NewEOI />
               </Route>
