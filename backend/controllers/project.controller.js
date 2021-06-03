@@ -1,7 +1,7 @@
-const { findByIdAndUpdate } = require("../models/project.model");
 const Project = require("../models/project.model");
 const Topic = require("../models/topic.model");
 const Group = require("../models/group.model");
+const Client = require("../models/client.model");
 
 exports.create = async (req, res) => {
   const newProject = new Project(req.body);
@@ -17,6 +17,68 @@ exports.create = async (req, res) => {
 exports.findProjects = async (req, res) => {
   try {
     let data = await Project.find({});
+    res.status(201).send(data);
+  } catch (error) {
+    res.status(500).send("Error retriving projects");
+  }
+};
+
+//Finding only Active Projects
+exports.findActiveProjects = async (req, res) => {
+  try {
+    let activeProjects = await Project.find({ status: ["open", "ongoing"] });
+    //TODO: append eoisReceived, group etc.
+    const data = await Promise.all(
+      activeProjects.map(async function (ap) {
+        let topics = [];
+        if (ap.topics) {
+          topics = await Topic.find().where("_id").in(ap.topics).exec();
+          topics = topics.map((topic) => topic.name);
+        }
+
+        let client = await Client.findById(ap.clientId);
+
+        return {
+          ...ap._doc,
+          topics: topics,
+          clientName: client?.companyName,
+          clientLogo: client?.companyLogoUrl,
+        };
+      })
+    );
+
+    res.status(201).send(data);
+  } catch (error) {
+    res.status(500).send("Error retriving projects");
+  }
+};
+
+//Finding only Inctive Projects
+exports.findInactiveProjects = async (req, res) => {
+  try {
+    let activeProjects = await Project.find({
+      status: ["wfa", "cr", "closed"],
+    });
+    //TODO: append eoisReceived, group etc.
+    const data = await Promise.all(
+      activeProjects.map(async function (ap) {
+        let topics = [];
+        if (ap.topics) {
+          topics = await Topic.find().where("_id").in(ap.topics).exec();
+          topics = topics.map((topic) => topic.name);
+        }
+
+        let client = await Client.findById(ap.clientId);
+
+        return {
+          ...ap._doc,
+          topics: topics,
+          clientName: client?.companyName,
+          clientLogo: client?.companyLogoUrl,
+        };
+      })
+    );
+
     res.status(201).send(data);
   } catch (error) {
     res.status(500).send("Error retriving projects");
@@ -42,10 +104,10 @@ exports.findById = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const { projectsId } = req.params;
+  const { projectId } = req.params;
   try {
     const updatedproject = await Project.findByIdAndUpdate(
-      projectsId,
+      projectId,
       req.body,
       {
         new: true,
@@ -104,3 +166,5 @@ exports.findProjectTopics = async (req, res) => {
     });
   }
 };
+
+//Find all projects for a particular user based on his/her ID.

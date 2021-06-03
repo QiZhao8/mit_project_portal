@@ -2,7 +2,8 @@ import React from "react";
 import { Button } from "antd";
 
 const ProposalStatusDetail = ({ status }) => {
-  if (status === "waiting_for_approval") {
+  //console.log(status);
+  if (status === "wfa") {
     return (
       <Button
         type="text"
@@ -27,7 +28,7 @@ const ProposalStatusDetail = ({ status }) => {
       </Button>
     );
   }
-  if (status === "changes_required") {
+  if (status === "cr") {
     return (
       <Button
         type="text"
@@ -41,7 +42,7 @@ const ProposalStatusDetail = ({ status }) => {
       </Button>
     );
   }
-  if (status === "approved") {
+  if (status === "open") {
     return (
       <Button
         type="text"

@@ -11,11 +11,10 @@ import BrowseProjects from "./components/BrowseProjects";
 import MyProjects from "./components/MyProjects";
 import CoordinatorDashboard from "./components/CoordinatorDashboard";
 import NewProject from "./components/NewProject";
+import ChairPRPDashboard from "./components/ChairPRPDashboard";
 import NewEOI from "./components/NewEOI";
-
 import DevSettings from "./DevSettings";
-
-// import MyProjects from "./components/MyProjects";
+import ProposalDecision from "./components/ChairPRPDashboard/ProposalDecision";
 
 // utils and constants
 import ROUTES from "./utils/routes";
@@ -23,8 +22,9 @@ import ROUTES from "./utils/routes";
 //Contexts
 import { ProjectProvider } from "./contexts/ProjectContext";
 import { EOIProvider } from "./contexts/EOIContext";
-import { ProposalProvider } from "./contexts/ProposalContext";
 import { StudentProvider } from "./contexts/StudentContext";
+import { SignUpRequestProvider } from "./contexts/SignUpRequestContext";
+import { InactiveProjectProvider } from "./contexts/InactiveProjectContext";
 
 let isLogged = true;
 let isSignedUp = true;
@@ -38,10 +38,7 @@ const ContentContainer = styled.div`
 function App() {
   return (
     <BrowserRouter>
-      {isLogged && (
-        /*<Header userType={state.userType} username={state.username} />*/
-        <Header />
-      )}
+      {isLogged && <Header />}
       <ContentContainer>
         <Switch>
           <ProjectProvider>
@@ -60,21 +57,29 @@ function App() {
             <Route exact path={ROUTES.NEW_PROJECT}>
               <NewProject />
             </Route>
-            <EOIProvider>
-              <ProposalProvider>
-                <Route exact path={ROUTES.MY_PROJECTS}>
-                  <MyProjects />
+            <SignUpRequestProvider>
+              <InactiveProjectProvider>
+                <Route exact path={ROUTES.CHAIR_PRP_DASHBOARD}>
+                  <ChairPRPDashboard />
                 </Route>
-              </ProposalProvider>
+              </InactiveProjectProvider>
+              <Route exact path={ROUTES.PROPOSAL_DECISION}>
+                <ProposalDecision />
+              </Route>
+            </SignUpRequestProvider>
+            <EOIProvider>
+              <Route exact path={ROUTES.MY_PROJECTS}>
+                <MyProjects />
+              </Route>
               <Route exact path={ROUTES.NEW_EOI}>
                 <NewEOI />
               </Route>
-              <StudentProvider>
-                <Route exact path={ROUTES.COORDINATOR_DASHBOARD}>
-                  <CoordinatorDashboard />
-                </Route>
-              </StudentProvider>
             </EOIProvider>
+            <StudentProvider>
+              <Route exact path={ROUTES.COORDINATOR_DASHBOARD}>
+                <CoordinatorDashboard />
+              </Route>
+            </StudentProvider>
           </ProjectProvider>
         </Switch>
       </ContentContainer>

@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { Row, Col } from "antd";
+import { Row, Col, Form } from "antd";
 
+import { EOIProvider } from "../../contexts/EOIContext";
 import { ProjectContext } from "../../contexts/ProjectContext";
 
 import ProjectsSummary from "./ProjectsSummary";
@@ -48,49 +49,55 @@ const CoordinatorDashboard = () => {
   const openproject = [];
   const ongoingproject = [];
   const closedproject = [];
-  const [project, setProject] = useContext(ProjectContext);
+  const [projects, setProjects] = useContext(ProjectContext);
   //console.log(project);
-  project.forEach(p => {
-    if (p.status === "Open") {
+  projects.forEach((p) => {
+    if (p.status === "open") {
       openproject.push(p);
     }
-    if (p.status === "Ongoing") {
+    if (p.status === "ongoing") {
       ongoingproject.push(p);
     }
-    if (p.status === "Closed") {
+    if (p.status === "closed") {
       closedproject.push(p);
     }
   });
   return (
-    <div>
+    <Form>
       <PageTitle>Staff Dashboard - Unit Coordinator</PageTitle>
       <Row gutter={24}>
         <Col span={8}>
           <OpenWrapper>
             <SectionTitle>Unallocated/Open Projects</SectionTitle>
-            {openproject.map(p => (
-              <ProjectsSummary key={p.projId} project={p} />
+            {openproject.map((p) => (
+              <EOIProvider key={p._id}>
+                <ProjectsSummary project={p} />
+              </EOIProvider>
             ))}
           </OpenWrapper>
         </Col>
         <Col span={8}>
           <OngoingWrapper>
             <SectionTitle>Ongoing Projects</SectionTitle>
-            {ongoingproject.map(p => (
-              <ProjectsSummary key={p.projId} project={p} />
+            {ongoingproject.map((p) => (
+              <EOIProvider key={p._id}>
+                <ProjectsSummary project={p} />
+              </EOIProvider>
             ))}
           </OngoingWrapper>
         </Col>
         <Col span={8}>
           <ClosedWrapper>
             <SectionTitle>Closed Projects</SectionTitle>
-            {closedproject.map(p => (
-              <ProjectsSummary key={p.projId} project={p} />
+            {closedproject.map((p) => (
+              <EOIProvider key={p._id}>
+                <ProjectsSummary project={p} />
+              </EOIProvider>
             ))}
           </ClosedWrapper>
         </Col>
       </Row>
-    </div>
+    </Form>
   );
 };
 
